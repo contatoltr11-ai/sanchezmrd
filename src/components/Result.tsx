@@ -41,8 +41,8 @@ export default function Result({ onNavigate }: ResultProps) {
     // ✅ MELHORIA #2: Timer de 10 minutos APENAS para a oferta
     const [offerTimeLeft, setOfferTimeLeft] = useState(10 * 60); // 600 segundos
     
-    // ✅ MELHORIA #5: State para seleção de plano
-    const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
+    // ✅ MELHORIA #5: State para seleção de plano (Plan Total $27 pré-selecionado)
+    const [selectedPlan, setSelectedPlan] = useState<number | null>(27);
 
     const [spotsLeft, setSpotsLeft] = useState(storage.getSpotsLeft());
     const [loadingProgress, setLoadingProgress] = useState(0);

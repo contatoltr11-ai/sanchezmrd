@@ -27,6 +27,67 @@ export default function PaginaOferta({
     const quizData = storage.getQuizData();
     const gender = quizData.gender || 'HOMBRE';
 
+    // Detecta o cenário do lead com base no quizData (regra exata)
+    const detectScenario = (): 'contacto_cero' | 'con_otro' | 'bloqueo' | 'ruptura_reciente' => {
+        if (quizData.currentSituation === 'CONTACTO CERO') return 'contacto_cero';
+        if (quizData.currentSituation === 'BLOQUEADO') return 'bloqueo';
+        if (
+            quizData.exSituation === 'RELACIÓN SERIA' ||
+            quizData.exSituation === 'SALIENDO CASUAL' ||
+            quizData.exSituation === 'VARIAS PERSONAS'
+        ) return 'con_otro';
+        if (quizData.timeSeparation === 'MENOS DE 1 SEMANA') return 'ruptura_reciente';
+        return 'ruptura_reciente';
+    };
+
+    const scenario = detectScenario();
+
+    // 5 variáveis × 4 cenários
+    const scenarioContent = {
+        escenario_diagnostico: {
+            contacto_cero: 'Tu diagnóstico apuntó a un escenario concreto: contacto cero. El silencio no es el final. Pero cada día que pasa, el terreno cambia.',
+            con_otro: 'Tu diagnóstico apuntó a un escenario concreto: ella está con otro. Duele. Pero el mapa aún puede leerse con claridad.',
+            bloqueo: 'Tu diagnóstico apuntó a un escenario concreto: bloqueo. El primer paso no es insistir. Es entender si todavía existe una aproximación segura.',
+            ruptura_reciente: 'Tu diagnóstico apuntó a un escenario concreto: ruptura reciente. El momento importa más que la intensidad.'
+        },
+        linea_caso: {
+            contacto_cero: 'El silencio no es el final. Pero cada día que pasa, el terreno cambia.',
+            con_otro: 'Ella está con otro. Pero el mapa aún puede leerse con claridad.',
+            bloqueo: 'El bloqueo no significa que la puerta esté cerrada para siempre. Significa que el primer paso es otro.',
+            ruptura_reciente: 'El dolor es reciente. Pero el timing decide si tu próxima acción abre o cierra la puerta.'
+        },
+        testimonio_caso: {
+            contacto_cero: {
+                texto: 'Estábamos en contacto cero total. Seguí el protocolo de la Fase 1 sin enviar mensajes. A los 12 días, ella me escribió primero. La recuperé.',
+                autor: 'Antonio S.'
+            },
+            con_otro: {
+                texto: 'Ella ya estaba con otro tipo y yo estaba destruido. El Módulo 4 (Protocolo de Emergencia) me salvó de cometer errores fatales. 4 días después, no es perfecto, pero ya estamos juntos de nuevo.',
+                autor: 'Jose R.'
+            },
+            bloqueo: {
+                texto: 'Me había bloqueado de todo. Pensé que no había vuelta atrás. El diagnóstico me mostró que el primer paso no era insistir, era entender el riesgo. Hoy hablamos con calma.',
+                autor: 'Carlos M.'
+            },
+            ruptura_reciente: {
+                texto: 'Terminamos hace poco y yo actué en el impulso, empeoré todo. El plan me mostró qué hacer en cada fase. Hoy hay una conversación tranquila de nuevo.',
+                autor: 'Diego F.'
+            }
+        },
+        recomendacion_plan: {
+            contacto_cero: 'Para tu escenario (contacto cero), el plan recomendado es el Total: incluye el Protocolo de Emergencia para no perder la ventana en el silencio.',
+            con_otro: 'Para tu escenario (ella con otro), el plan recomendado es el Total: el Módulo 4 es el que resuelve casos críticos. El 73% de casos como el tuyo lo elige.',
+            bloqueo: 'Para tu escenario (bloqueo), el plan recomendado es el Total: incluye el soporte prioritario para saber qué hacer sin arriesgar la puerta.',
+            ruptura_reciente: 'Para tu escenario (ruptura reciente), el plan recomendado es el Total: el timing es lo más delicado y el Módulo 4 evita los errores que cierran la puerta.'
+        },
+        cta_final: {
+            contacto_cero: 'Aplicar mi plan — mi ventana no espera',
+            con_otro: 'Aplicar mi plan — el timing es ahora',
+            bloqueo: 'Aplicar mi plan — el primer paso correcto',
+            ruptura_reciente: 'Aplicar mi plan — antes de que el terreno cambie'
+        }
+    } as const;
+
     return (
         <>
             {/* Transição pré-oferta */}
@@ -56,7 +117,17 @@ export default function PaginaOferta({
                 }}>
                     LLEGASTE AL ÚLTIMO PASO
                 </h3>
-                
+
+                <p style={{
+                    fontSize: 'clamp(1rem, 4vw, 1.2rem)',
+                    color: '#facc15',
+                    lineHeight: '1.6',
+                    marginBottom: 'clamp(16px, 4vw, 20px)',
+                    fontWeight: '700'
+                }}>
+                    {scenarioContent.escenario_diagnostico[scenario]}
+                </p>
+
                 <p style={{
                     fontSize: 'clamp(1.05rem, 4vw, 1.25rem)',
                     color: 'rgba(255,255,255,0.95)',
@@ -206,7 +277,18 @@ export default function PaginaOferta({
                 }}>
                     Recupera A {gender === 'HOMBRE' ? 'La Mujer Que Amas' : 'El Hombre Que Amas'}
                 </h2>
-                
+
+                <p style={{
+                    fontSize: 'clamp(0.95rem, 3.8vw, 1.1rem)',
+                    color: '#4ade80',
+                    textAlign: 'center',
+                    lineHeight: '1.5',
+                    marginBottom: 'clamp(12px, 3vw, 16px)',
+                    fontWeight: '600'
+                }}>
+                    {scenarioContent.linea_caso[scenario]}
+                </p>
+
                 <p style={{
                     fontSize: 'clamp(1.05rem, 4vw, 1.25rem)',
                     color: 'rgba(255,255,255,0.85)',
@@ -216,6 +298,29 @@ export default function PaginaOferta({
                 }}>
                     (O Devolvemos El 100% De Tu Dinero)
                 </p>
+
+                {/* Justificativa da pré-seleção do plano por cenário */}
+                <div style={{
+                    background: 'linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(249, 115, 22, 0.1))',
+                    border: '2px solid rgba(234, 179, 8, 0.4)',
+                    borderRadius: '14px',
+                    padding: 'clamp(16px, 4vw, 20px)',
+                    marginBottom: 'clamp(20px, 4vw, 28px)',
+                    display: 'flex',
+                    gap: '12px',
+                    alignItems: 'flex-start'
+                }}>
+                    <span style={{ fontSize: 'clamp(1.4rem, 5vw, 1.8rem)', flexShrink: 0 }}>👉</span>
+                    <p style={{
+                        fontSize: 'clamp(0.95rem, 3.8vw, 1.1rem)',
+                        color: 'white',
+                        lineHeight: '1.55',
+                        margin: 0,
+                        fontWeight: '600'
+                    }}>
+                        {scenarioContent.recomendacion_plan[scenario]}
+                    </p>
+                </div>
 
                 {/* ✅ MELHORIA #5: 2 Planos lado a lado ($14 / $27) */}
                 <div style={{
@@ -433,7 +538,7 @@ export default function PaginaOferta({
                         lineHeight: '1.3'
                     }}>
                         {selectedPlan 
-                            ? `🚀 ACCEDER A MI PLAN POR $${selectedPlan}` 
+                            ? `🚀 ${scenarioContent.cta_final[scenario]} ($${selectedPlan})` 
                             : '👆 ELIGE UN PLAN ARRIBA PRIMERO'
                         }
                     </span>
@@ -512,7 +617,7 @@ export default function PaginaOferta({
                                         fontSize: 'clamp(0.95rem, 3.8vw, 1.15rem)',
                                         color: '#10b981'
                                     }}>
-                                        Jose R.
+                                        {scenarioContent.testimonio_caso[scenario].autor}
                                     </strong>
                                     <span style={{
                                         fontSize: 'clamp(0.7rem, 2.8vw, 0.8rem)',
@@ -535,7 +640,7 @@ export default function PaginaOferta({
                                     margin: 0,
                                     fontStyle: 'italic'
                                 }}>
-                                    "¡Le daría diez estrellas de cinco! Al principio era escéptico sobre el programa. Pensé que eran reseñas falsas y había perdido toda esperanza con mi novia. Ella ya estaba con otro tipo y yo estaba destruido. No podíamos hablar sin pelear, y ahora 4 días después de empezar el programa, con lo que aprendí del Módulo 4 (Protocolo de Emergencia), no es perfecto pero ya estamos juntos de nuevo y dispuestos a hacer todo para que funcione. El Módulo 4 me salvó de cometer errores fatales."
+                                    {`"${scenarioContent.testimonio_caso[scenario].texto}"`}
                                 </p>
                             </div>
                         </div>
@@ -904,7 +1009,7 @@ export default function PaginaOferta({
                     }}
                 >
                     {selectedPlan 
-                        ? `✅ ACCEDER A MI PLAN POR $${selectedPlan} →` 
+                        ? `✅ ${scenarioContent.cta_final[scenario]} ($${selectedPlan}) →` 
                         : '👆 ELIGE UN PLAN ARRIBA PRIMERO'
                     }
                 </button>
