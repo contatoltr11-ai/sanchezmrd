@@ -595,7 +595,7 @@ export default function PaginaOferta({
                             {/* Avatar Mateo - COLE O LINK DA FOTO NO src="" */}
                             <img 
                                 src="https://i.ibb.co/C3PmYyJ3/juan-prova.webp" 
-                                alt="Mateo R." 
+                                alt={scenarioContent.testimonio_caso[scenario].autor} 
                                 style={{
                                     width: 'clamp(55px, 14vw, 70px)',
                                     height: 'clamp(55px, 14vw, 70px)',
