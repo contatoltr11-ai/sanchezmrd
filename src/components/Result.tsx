@@ -4,15 +4,15 @@ import { playKeySound, getHotmartUrl } from '../utils/animations';
 import { QuizAnswer } from '../types/quiz';
 import { ga4Tracking } from '../utils/ga4Tracking';
 
-import {
-    getTitle,
-    getLoadingMessage,
-    getCopy,
+import { 
+    getTitle, 
+    getLoadingMessage, 
+    getCopy, 
     getVentana72Copy,
     getVentanaSummary,
     getVentanaImportance,
     getOfferTitle,
-    getFeatures,
+    getFeatures, 
     getCTA,
     getFaseText
 } from '../utils/contentByGender';
@@ -32,7 +32,7 @@ export default function Result({ onNavigate }: ResultProps) {
     const [fadeOutPhase, setFadeOutPhase] = useState<number | null>(null);
     const [videoButtonDelayLeft, setVideoButtonDelayLeft] = useState(10);
     const [isVideoButtonEnabled, setIsVideoButtonEnabled] = useState(false);
-    const [buttonCheckmarks, setButtonCheckmarks] = useState<{ [key: number]: boolean }>({
+    const [buttonCheckmarks, setButtonCheckmarks] = useState<{[key: number]: boolean}>({
         0: false,
         1: false,
         2: false
@@ -40,7 +40,7 @@ export default function Result({ onNavigate }: ResultProps) {
 
     // ✅ MELHORIA #2: Timer de 10 minutos APENAS para a oferta
     const [offerTimeLeft, setOfferTimeLeft] = useState(10 * 60); // 600 segundos
-
+    
     // ✅ MELHORIA #5: State para seleção de plano (Plan Total $27 pré-selecionado)
     const [selectedPlan, setSelectedPlan] = useState<number | null>(27);
 
@@ -144,7 +144,7 @@ export default function Result({ onNavigate }: ResultProps) {
             const offerTimer = setInterval(() => {
                 setOfferTimeLeft(prev => (prev <= 1 ? 0 : prev - 1));
             }, 1000);
-
+            
             return () => clearInterval(offerTimer);
         }
     }, [currentPhase]);
@@ -175,30 +175,30 @@ export default function Result({ onNavigate }: ResultProps) {
 
     useEffect(() => {
         if (currentPhase !== 2 || !videoSectionRef.current) return;
-
+        
         const timer = setTimeout(() => {
             const vslPlaceholder = videoSectionRef.current?.querySelector('.vsl-placeholder');
             if (vslPlaceholder) {
                 vslPlaceholder.innerHTML = `
                     <div style="position: relative; width: 100%; max-width: 400px; margin: 0 auto; aspect-ratio: 9 / 16; background: #000; border-radius: 8px; overflow: hidden;">
-                        <vturb-smartplayer id="vid-6a9acacfe3c5f929605046eb" style="display: block; width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></vturb-smartplayer>
+                        <vturb-smartplayer id="vid-6a89daaa4523d5d6f4642e05" style="display: block; width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></vturb-smartplayer>
                     </div>
                 `;
-                if (!document.querySelector('script[src*="6a9acacfe3c5f929605046eb"]')) {
+                if (!document.querySelector('script[src*="6a89daaa4523d5d6f4642e05"]')) {
                     const s = document.createElement("script");
-                    s.src = "https://scripts.converteai.net/b6ade6b0-9942-4073-b2c8-16fcc1e15b71/players/6a9acacfe3c5f929605046eb/v4/player.js";
+                    s.src = "https://scripts.converteai.net/dc50eed5-ebeb-444c-83cd-2925b9fb3f27/players/6a89daaa4523d5d6f4642e05/v4/player.js";
                     s.async = true;
                     document.head.appendChild(s);
                 }
             }
         }, 500);
-
+        
         return () => clearTimeout(timer);
     }, [currentPhase]);
 
     useEffect(() => {
         let targetRef: React.RefObject<HTMLDivElement> | null = null;
-
+        
         switch (currentPhase) {
             case 1:
                 targetRef = diagnosticoSectionRef;
@@ -298,7 +298,7 @@ export default function Result({ onNavigate }: ResultProps) {
             )}
 
             <div className="revelations-container">
-
+                
                 {/* FASE 0: Loading - MANTIDA */}
                 {currentPhase === 0 && (
                     <div className="revelation fade-in loading-box-custom">
